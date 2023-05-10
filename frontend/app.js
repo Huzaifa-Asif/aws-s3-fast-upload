@@ -2,6 +2,7 @@ const baseUrl = 'http://127.0.0.1:3000';
 const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunk size
 const fileInput = document.querySelector('#fileInput');
 const uploadBtn = document.querySelector('#uploadBtn');
+const progressBar = document.querySelector('.progress-bar');
 let file, fileName, totalChunks, uploadId;
 
 // Listen for file input change event
@@ -39,6 +40,7 @@ uploadBtn.addEventListener('click', async () => {
     console.log("uploadId ", uploadId);
     // Send file chunks
     const uploadPromises = [];
+    let uploadedChunks = 0;
     let start = 0, end;
     for (let i = 0; i < totalChunks; i++) {
       end = start + CHUNK_SIZE;
@@ -51,7 +53,11 @@ uploadBtn.addEventListener('click', async () => {
       const uploadPromise = fetch(`${baseUrl}/upload?uploadId=${uploadId}`, {
         method: "POST",
         body: formData,
-      })
+      }).then(() => {
+        uploadedChunks++;
+        const progress = Math.floor((uploadedChunks / totalChunks) * 100);
+        updateProgressBar(progress);
+      });
       uploadPromises.push(uploadPromise);
       start = end;
     }
@@ -60,8 +66,9 @@ uploadBtn.addEventListener('click', async () => {
 
     // Complete multipart upload
     const completeRes = await fetch(`${baseUrl}/completeUpload?fileName=${fileName}&uploadId=${uploadId}`, { method: 'POST' });
-    const { message } = await completeRes.json();
-    if (message !== 'Upload complete') {
+    const { success, data } = await completeRes.json();
+    console.log("file link: ", data);
+    if (!success) {
       throw new Error('Error completing upload');
     }
 
@@ -70,6 +77,7 @@ uploadBtn.addEventListener('click', async () => {
     const timeElapsed = (endTime - startTime) / 1000;
     console.log('Time elapsed:', timeElapsed, 'seconds');
     alert('File uploaded successfully');
+    resetProgressBar();
   } catch (err) {
     console.log(err);
     alert('Error uploading file');
@@ -77,3 +85,17 @@ uploadBtn.addEventListener('click', async () => {
 
   uploadBtn.disabled = false;
 });
+
+// update progress bar
+function updateProgressBar(progress) {
+  progressBar.style.width = progress + '%';
+  progressBar.textContent = progress + '%';
+  console.log("progress ", progress);
+}
+
+// Reset progress bar and file input
+function resetProgressBar() {
+  progressBar.style.width = '0%';
+  progressBar.textContent = '';
+  fileInput.value = '';
+}

@@ -29,7 +29,7 @@ uploadBtn.addEventListener('click', async () => {
       body: formData,
     });
     const { success, data } = await uploadRes.json();
-    console.log("success ", success, "data ", data);
+    console.log("file link: ", data);
     if (!success) {
       throw new Error('Error completing upload');
     }

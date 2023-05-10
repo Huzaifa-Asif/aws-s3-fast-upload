@@ -38,7 +38,7 @@ app.post('/initiateUpload', async (req, res) => {
     res.json({ uploadId: upload.UploadId });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error initializing upload' });
+    res.status(500).json({ success: false, message: 'Error initializing upload' });
   }
 });
 
@@ -58,10 +58,10 @@ app.post('/upload', upload.single("file"), (req, res) => {
   s3.uploadPart(s3Params, (err, data) => {
     if (err) {
       console.log(err);
-      return res.status(500).json({ message: 'Error uploading chunk' });
+      return res.status(500).json({ success: false, message: 'Error uploading chunk' });
     }
 
-    return res.json({ message: 'Chunk uploaded successfully' });
+    return res.json({ success: true, message: 'Chunk uploaded successfully' });
   });
 });
 
@@ -77,7 +77,7 @@ app.post('/completeUpload', (req, res) => {
   s3.listParts(s3Params, (err, data) => {
     if (err) {
       console.log(err);
-      return res.status(500).json({ message: 'Error listing parts' });
+      return res.status(500).json({ success: false, message: 'Error listing parts' });
     }
 
     const parts = [];
@@ -95,11 +95,11 @@ app.post('/completeUpload', (req, res) => {
     s3.completeMultipartUpload(s3Params, (err, data) => {
       if (err) {
         console.log(err);
-        return res.status(500).json({ message: 'Error completing upload' });
+        return res.status(500).json({ success: false, message: 'Error completing upload' });
       }
 
       console.log("data: ", data)
-      return res.json({ message: 'Upload complete', data: data.Location});
+      return res.json({ success: true, message: 'Upload complete', data: data.Location});
     });
   });
 });

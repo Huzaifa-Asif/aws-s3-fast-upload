@@ -5,6 +5,8 @@
   <title>Upload File</title>
   <!-- Include Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" crossorigin="anonymous" />
+   <!-- Link to your custom CSS file -->
+   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container my-5">
@@ -17,6 +19,9 @@
               <div class="form-group">
                 <label for="fileInput">Select File:</label>
                 <input type="file" class="form-control-file" id="fileInput">
+              </div>
+              <div class="progress mb-3">
+                <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
               <button type="submit" class="btn btn-primary" id="uploadBtn">Upload</button>
             </form>
