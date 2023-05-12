@@ -45,7 +45,7 @@ Uploading complete file from frontend then Creating Chunks on Backend and doing 
 
 ### Backend Code
 
-Backend Folder: backend
+Backend Folder: backend2
 
 To run this code: Install the required npm modules, by running the below command.
 ```
@@ -61,7 +61,7 @@ npm start
   
 ### Frontend Code
 
-Folder Folder: frontend
+Folder Folder: frontend2
 
 To run this code:
 
